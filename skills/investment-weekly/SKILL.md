@@ -8,6 +8,25 @@ tags: [obsidian, finance, weekly, investment]
 
 每周日自动生成投资周报，整合基金持仓数据和山水邸报市场信息。
 
+> ⚠️ 此 skill 为**可选功能**，需要基金追踪 API 支持。不配置也能使用其他所有 skill。
+
+## 可选依赖
+
+### 基金追踪 API
+
+需要配置基金追踪服务，设置环境变量：
+
+```bash
+export FUND_API="your_fund_api_endpoint"
+```
+
+API 需支持以下接口：
+- `GET /summary` — 持仓总览
+- `GET /records` — 持仓明细
+- `GET /overview` — 大盘指数
+- `GET /daily-rank` — 涨跌榜
+- `GET /fund-timeline?code=xxx&days=7` — 基金历史净值
+
 ## 数据来源
 
 ### 基金追踪 API — 主要数据源

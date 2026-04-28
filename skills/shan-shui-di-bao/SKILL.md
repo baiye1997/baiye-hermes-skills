@@ -8,6 +8,35 @@ tags: [obsidian, news, daily, stock, weather, eastmoney]
 
 自动生成每日早报/晚报 Markdown 文件，写入 Obsidian vault 并同步。
 
+> ⚠️ 财经数据部分（东财新闻、市场热点）为**可选功能**，不配置也能正常生成早晚报（仅缺少财经新闻板块）。
+
+## 可选依赖
+
+### 东方财富妙想 API（用于财经新闻和市场数据）
+
+如需财经新闻板块，需安装以下 skill：
+
+```bash
+# 1. 注册东方财富妙想账号，获取 API Key
+#    访问: https://ai.eastmoney.com/mxClaw
+
+# 2. 配置环境变量
+export EM_API_KEY="your_api_key"
+
+# 3. 安装东财 skill（从 ClawHub 或手动安装）
+#    - em-finance-search: 财经新闻搜索
+#    - em-market-hotspot: 市场热点发现
+#    - em-macro-data: 宏观经济数据（可选）
+```
+
+安装后，脚本路径为：
+- `~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/get_data.py`
+- `~/.hermes/eastmoney-skills/stock-market-hotspot-discovery/stock-market-hotspot-discovery/scripts/get_data.py`
+
+### 基金追踪 API（用于收益数据，可选）
+
+如需展示收益概览，需配置基金追踪 MCP 服务器。
+
 ## 数据源
 
 ### 1. 天气 — wttr.in（免费，无需 API Key）
@@ -38,7 +67,7 @@ curl -s "wttr.in/{城市}?format=j1&lang=zh"
 #### 2a. 财经新闻搜索 — em-finance-search
 
 ```bash
-python3 scripts/em-finance-search.py "搜索关键词"
+python3 ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/get_data.py "搜索关键词"
 ```
 
 返回 JSON，关键字段：
@@ -58,7 +87,7 @@ python3 scripts/em-finance-search.py "搜索关键词"
 #### 2b. 市场热点发现 — em-market-hotspot
 
 ```bash
-python3 scripts/em-market-hotspot.py --query "今日A股市场热点"
+python3 ~/.hermes/eastmoney-skills/stock-market-hotspot-discovery/stock-market-hotspot-discovery/scripts/get_data.py --query "今日A股市场热点"
 ```
 
 返回 Markdown 表格，包含：
@@ -68,7 +97,7 @@ python3 scripts/em-market-hotspot.py --query "今日A股市场热点"
 #### 2c. 宏观经济数据 — em-macro-data
 
 ```bash
-python3 scripts/em-macro-data.py --query "查询内容"
+python3 ~/.hermes/eastmoney-skills/mx-macro-data/mx-macro-data/scripts/get_data.py --query "查询内容"
 ```
 
 返回 CSV 文件，包含宏观经济指标。
@@ -237,7 +266,7 @@ curl -s $FUND_API/daily-rank
 **东财财经新闻抓取策略：**
 ```bash
 # 早报：搜索盘前消息
-python3 scripts/em-finance-search.py "今日A股市场重要公告和政策"
+python3 ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/get_data.py "今日A股市场重要公告和政策"
 
 # 晚报：搜索收盘后消息
 /usr/bin/python3 scripts/get_data.py "今日A股收盘后重要公告"
@@ -523,9 +552,10 @@ tags:
 
 1. **获取天气**：`curl -s "wttr.in/{CITY}?format=j1&lang=zh"`
 2. **获取行情**：早报用 `get_summary` + `get_indices`；晚报用 `get_summary` + `get_records` + `get_indices` + `get_daily_rank`
-3. **获取东财数据**：
+3. **获取东财数据**（可选，未安装则跳过）：
    - 早报：`em-finance-search` 搜索盘前消息 + `em-market-hotspot` 获取热点
    - 晚报：`em-finance-search` 搜索收盘后消息 + `em-market-hotspot` 获取热点复盘
+   - 如未安装东财 skill 或 `EM_API_KEY` 未配置，跳过此步骤，早晚报仍可正常生成
 4. **抓取新闻**：用 `web_extract` 逐个抓取新闻源首页 + 东财财经新闻
 5. **组装 Markdown**：按模板填充数据，合并重叠板块
 6. **智能标签**：根据笔记内容自动提取关键词，更新 frontmatter tags（参考 obsidian-auto-tags skill）

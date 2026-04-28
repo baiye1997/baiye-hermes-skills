@@ -10,16 +10,16 @@
 
 ### 📰 信息流
 
-| Skill | 说明 | 定时 |
-|-------|------|------|
-| [shan-shui-di-bao](skills/shan-shui-di-bao/) | 山水邸报 — 每日早晚报，整合天气/A股/财经新闻/板块热点 | 工作日 08:00 / 20:00 |
-| [weekly-must-read](skills/weekly-must-read/) | 本周必读 — 从山水邸报提取 🔥 必读文章，按周汇总 | 每周日 10:00 |
+| Skill | 说明 | 定时 | 依赖 |
+|-------|------|------|------|
+| [shan-shui-di-bao](skills/shan-shui-di-bao/) | 山水邸报 — 每日早晚报，整合天气/A股/财经新闻/板块热点 | 工作日 08:00 / 20:00 | [东财 API](#可选依赖)（可选） |
+| [weekly-must-read](skills/weekly-must-read/) | 本周必读 — 从山水邸报提取 🔥 必读文章，按周汇总 | 每周日 10:00 | 依赖山水邸报 |
 
-### 💰 投资
+### 💰 投资（可选）
 
-| Skill | 说明 | 定时 |
-|-------|------|------|
-| [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总持仓数据+市场信息，生成周度复盘 | 每周日 10:15 |
+| Skill | 说明 | 定时 | 依赖 |
+|-------|------|------|------|
+| [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总持仓数据+市场信息，生成周度复盘 | 每周日 10:15 | [基金追踪 API](#可选依赖) |
 
 ### 📝 笔记
 
@@ -123,6 +123,31 @@ export FUND_API="your_fund_api_endpoint"
 终点：{YOUR_OFFICE_ADDRESS}
 城市：{CITY}
 ```
+
+---
+
+## 🔧 可选依赖
+
+部分 skill 需要额外的 API 或服务支持：
+
+### 东方财富妙想 API（财经新闻/市场数据）
+
+用于 `shan-shui-di-bao` 的财经新闻板块。
+
+1. 注册：https://ai.eastmoney.com/mxClaw
+2. 获取 API Key
+3. 配置：`export EM_API_KEY="your_key"`
+4. 安装东财 skill：[em-finance-search](https://github.com/anthropic/...), [em-market-hotspot](https://github.com/anthropic/...)
+
+> 💡 不配置也能使用山水邸报，只是缺少财经新闻板块。
+
+### 基金追踪 API（持仓数据）
+
+用于 `investment-weekly` 和 `shan-shui-di-bao` 的收益展示。
+
+需自建或使用第三方基金追踪服务，暴露 REST API。
+
+> 💡 不配置也能使用其他所有 skill。
 
 ---
 
