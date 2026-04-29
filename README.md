@@ -56,7 +56,7 @@
 ### 前置要求
 
 - [Hermes Agent](https://github.com/NousResearch/hermes-agent) 已安装
-- [Obsidian](https://obsidian.md/) + [Obsidian Headless CLI](https://github.com/nicholasgasior/obsidian-headless)（可选，用于同步）
+- [Obsidian](https://obsidian.md/) + [Obsidian Headless](https://obsidian.md/zh/help/headless)（可选，用于同步）
 
 ### 安装
 
