@@ -89,6 +89,8 @@ cp -r baiye-hermes-skills/templates/obsidian-vault ~/obsidian-vault
 ├── 📖 夜航船/          # 研究报告与技术文档
 ├── 📒 学海无涯/        # 每日英语
 ├── 🍺 二掌柜的酒铺/    # 日记/杂记
+├── 💡 灵感捕捉/        # 想法记录
+├── 📚 阅读清单/        # 阅读管理
 ├── README.md           # 主索引
 └── graph.md            # 知识图谱
 ```
