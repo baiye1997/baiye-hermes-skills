@@ -19,7 +19,7 @@
 
 | Skill | 说明 | 定时 | 依赖 |
 |-------|------|------|------|
-| [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总花花日记持仓+山水邸报市场信息，生成周度复盘 | 每周日 10:15 | [花花日记](#花花日记) |
+| [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总花花日记持仓+山水邸报市场信息，生成周度复盘 | 每周日 10:15 | [花花日记](https://github.com/baiye1997/HuaHuaDailyMCP) |
 
 ### 📝 笔记
 
