@@ -282,7 +282,7 @@ tags:
 
 ---
 
-## 🌤 今日成都
+## 🌤 今日{城市}
 
 ☁️ **{天气描述}** {温度}°C　|　💧 {湿度}%　|　🌬 {风向} {风速}km/h
 
@@ -376,7 +376,7 @@ tags:
 
 ---
 
-## 🌤 今日成都
+## 🌤 今日{城市}
 
 ☁️ **{天气描述}** {温度}°C　|　💧 {湿度}%　|　🌬 {风向} {风速}km/h
 
@@ -510,7 +510,7 @@ tags:
   - 美伊局势
 ---
 ```
-**⚠️ tags 必须用 YAML 列表格式（每行 `- `），不能用 `[...]` 数组格式，否则 Obsidian 不识别多标签。**
+Tags 必须使用 YAML 列表格式（每行 `- ``），不支持 `[...]` 数组格式。
 
 ## 存储位置
 
@@ -520,7 +520,7 @@ tags:
 
 ## 执行流程
 
-1. **获取天气**：`curl -s "wttr.in/成都?format=j1&lang=zh"`
+1. **获取天气**：`curl -s "wttr.in/{城市}?format=j1&lang=zh"`
 2. **获取行情**：早报用 `get_summary` + `get_indices`；晚报用 `get_summary` + `get_records` + `get_indices` + `get_daily_rank`
 3. **获取东财数据**：
    - 早报：`em-finance-search` 搜索盘前消息 + `em-market-hotspot` 获取热点
@@ -529,13 +529,13 @@ tags:
 5. **组装 Markdown**：按模板填充数据，合并重叠板块
 6. **智能标签**：根据笔记内容自动提取关键词，更新 frontmatter tags（参考 obsidian-auto-tags skill）
 7. **写入文件**：`write_file` 到 vault 路径
-8. **⚠️ 增量更新 README**：读取 vault 目录下所有 .md 文件，重新生成 README.md 索引（含 wiki-link 关系图谱）
-9. **⚠️ 更新主索引**：同步更新 `~/obsidian-vault/README.md`（主索引篇数）和 `graph.md`（知识图谱关系）
-10. **⚠️ 必须同步**：写入完成后，**必须**依次执行以下两步：
+8. **增量更新 README**：读取 vault 目录下所有 .md 文件，重新生成 README.md 索引（含 wiki-link 关系图谱）
+9. **更新主索引**：同步更新 `~/obsidian-vault/README.md`（主索引篇数）和 `graph.md`（知识图谱关系）
+10. **同步发布**：写入完成后，**必须**依次执行以下两步：
     - `cd ~/obsidian-vault && ob sync` — 同步到 Obsidian Cloud（手机端可见）
     - `cd ~/obsidian-vault && git add -A && git commit -m "feat: {描述}" && git push` — 推送到 GitHub（博客依赖此步骤）
-    - ⚠️ `ob sync` 和 `git push` 是两回事！只做 ob sync 不会推到 GitHub，博客就不会更新。
-11. **⚠️ 同步博客**：git push 后，`notify-blog.yml` 会自动触发博客 `deploy.yml` 部署。确认部署完成：`cd ~/baiye1997.github.io && gh run list --limit 1`。如需手动触发，执行 `cd ~/baiye1997.github.io && git commit --allow-empty -m "sync: trigger deploy" && git push`。
+    - `ob sync` 仅同步 Obsidian vault，`git push` 才会触发博客部署。两者需依次执行。
+11. **博客部署**：git push 后，`notify-blog.yml` 会自动触发博客 `deploy.yml` 部署。确认部署完成：`cd ~/baiye1997.github.io && gh run list --limit 1`。如需手动触发，执行 `cd ~/baiye1997.github.io && git commit --allow-empty -m "sync: trigger deploy" && git push`。
 
 ### 增量更新 README 的逻辑
 
@@ -572,7 +572,7 @@ category: 知识导航
 
 每篇笔记的 wiki-link 格式（带文件夹路径，不带 .md 后缀）：`[[🏔️ 山水邸报/{文件名去掉.md}|山水邸报 · {MM-DD}]]`
 
-**⚠️ 表格内 wiki-link 注意事项：** 表格中不能用 `[[path|显示文字]]` 格式，因为 `|` 会被 Obsidian 当作列分隔符，导致链接被拆到不同列。表格内必须用 `[[path]]` 不带显示文字。非表格场景（列表、正文）可以用 `[[path|显示文字]]`。
+表格内 wiki-link 格式： 表格中不能用 `[[path|显示文字]]` 格式，因为 `|` 会被 Obsidian 当作列分隔符，导致链接被拆到不同列。表格内必须用 `[[path]]` 不带显示文字。非表格场景（列表、正文）可以用 `[[path|显示文字]]`。
 
 ## 定时任务
 
@@ -590,23 +590,23 @@ schedule: "0 20 * * 1-5"
 
 ## 注意事项
 
-- **⚠️ 博客隐私脱敏**：早晚报同步到博客时，deploy workflow 会自动移除收益相关段落（收益概览、收益明细、持仓明细、盘前走势预测、投资总结中的收益归因）。Vault 保留完整版，博客只展示公开内容。
-- **⚠️ 文件命名必须用精华标题**：不要用"新闻速递"这种泛泛的标题，从当日新闻提炼 1-2 个核心事件凝练成标题。frontmatter 必须包含 `title` 字段。
-- **⚠️ 改名/新增笔记后必须执行步骤 8-10**：更新 README 索引 → 更新主索引 + graph.md → ob sync。不可跳过。
+- **隐私脱敏**：deploy workflow 会自动移除收益相关段落（收益概览、收益明细、持仓明细、盘前走势预测、投资总结中的收益归因）。Vault 保留完整版，博客仅展示公开内容。
+- **文件命名**：从当日新闻提炼 1-2 个核心事件作为标题，frontmatter 必须包含 `title` 字段。
+- **新增/改名后**：依次执行 更新 README 索引 → 更新主索引 + graph.md → ob sync。
 
-- **⚠️ read_file 行号腐蚀**：需要读取并重写文件时，必须用 `terminal("cat path")` 读取原始内容，绝不能用 `read_file`（会把行号嵌入文件内容导致损坏）
-- **⚠️ 天气 curl 被安全扫描拦截**：`curl` 命令访问 wttr.in 会被安全扫描器拦截（非 ASCII 路径 + 无 scheme URL）。**备用方案**：用 `browser_navigate` 打开任意页面，再通过 `browser_console` 执行 `fetch()`：
+- **文件读写**：重写文件时，使用 `terminal("cat path")` 读取原始内容，不要使用 `read_file`（会注入行号前缀导致内容损坏）。
+- **天气获取**：优先使用 `fetch()` 方式获取天气数据（通过 `browser_console` 执行）。备用方案：
   ```js
   (async () => {
     const r = await fetch('https://wttr.in/Chengdu?format=j1&lang=zh');
     return await r.json();
   })()
   ```
-  注意：直接导航到 wttr.in JSON URL 会触发下载而非渲染，必须用 fetch 方式。
+直接导航到 wttr.in JSON URL 会触发下载，需通过 `fetch()` 获取。
 - **新闻时效性**：只抓取当天或前一天的新闻，超过 2 天的一律跳过。优先选择当日发布的文章，标题或正文包含明确日期的优先校验。
 - 非交易日跳过 A 股板块（用 `get_status` 判断 `is_trading_day`）
 - 新闻抓取可能失败，每个源独立 try-catch，失败则跳过该源
-- **⚠️ 机器之心 (jiqizhixin.com) 已停更**：2026年4月确认，该站已转型为数据服务平台，所有页面重定向到落地页，不再公开发布文章。新闻源已移除，不再抓取。
+- 机器之心 (jiqizhixin.com) 已停更并转型，不再作为新闻源。
 - 天气 API 偶尔超时，设置 10s 超时，失败则显示"天气数据暂不可用"
 - 东财 API 可能返回空结果或错误，失败则跳过该数据源，不影响其他内容生成
 - 文件写入后自动更新 README 并 `ob sync`，确保 Obsidian 端同步

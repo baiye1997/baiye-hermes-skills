@@ -154,4 +154,4 @@ schedule: "15 10 * * 0"
 - **周收益计算**：每次运行时保存 summary 快照到 `/tmp/weekly_snapshot.json`，下周运行时对比计算周收益
 - 处理完成后执行 `cd ~/obsidian-vault && ob sync`
 - 更新主索引：更新 `~/obsidian-vault/README.md`（金精铜钱篇数）和 `graph.md`
-- ⚠️ 金精铜钱不同步博客，仅存 Obsidian
+- 金精铜钱不同步博客，仅存 Obsidian。

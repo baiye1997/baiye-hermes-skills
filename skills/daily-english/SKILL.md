@@ -70,7 +70,7 @@ ob sync          # 同步到 Obsidian 云端
 git add "📒 学海无涯/" && git commit -m "feat: 每日一学 $(date +%Y-%m-%d) {word}" && git push  # 推送到博客
 ```
 
-⚠️ 博客从 vault 的 git 仓库拉取笔记，只做 `ob sync` 不会同步到博客，必须 `git push`。
+博客通过 git 仓库拉取笔记，仅 `ob sync` 不会同步到博客，需执行 `git push`。
 
 ## 定时任务
 
