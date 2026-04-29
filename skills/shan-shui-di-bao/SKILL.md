@@ -8,35 +8,6 @@ tags: [obsidian, news, daily, stock, weather, eastmoney]
 
 自动生成每日早报/晚报 Markdown 文件，写入 Obsidian vault 并同步。
 
-> ⚠️ 财经数据部分（东财新闻、市场热点）为**可选功能**，不配置也能正常生成早晚报（仅缺少财经新闻板块）。
-
-## 可选依赖
-
-### 东方财富妙想 API（用于财经新闻和市场数据）
-
-如需财经新闻板块，需安装以下 skill：
-
-```bash
-# 1. 注册东方财富妙想账号，获取 API Key
-#    访问: https://ai.eastmoney.com/mxClaw
-
-# 2. 配置环境变量
-export EM_API_KEY="your_api_key"
-
-# 3. 安装东财 skill（从 ClawHub 或手动安装）
-#    - em-finance-search: 财经新闻搜索
-#    - em-market-hotspot: 市场热点发现
-#    - em-macro-data: 宏观经济数据（可选）
-```
-
-安装后，脚本路径为：
-- `~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/get_data.py`
-- `~/.hermes/eastmoney-skills/stock-market-hotspot-discovery/stock-market-hotspot-discovery/scripts/get_data.py`
-
-### 基金追踪 API（用于收益数据，可选）
-
-如需展示收益概览，需配置基金追踪 MCP 服务器。
-
 ## 数据源
 
 ### 1. 天气 — wttr.in（免费，无需 API Key）
@@ -62,12 +33,13 @@ curl -s "wttr.in/{城市}?format=j1&lang=zh"
 
 ### 2. 东财数据源（东方财富妙想 API）
 
-**环境变量：** `EM_API_KEY`（需自行配置）
+**环境变量：** `EM_API_KEY`（已配置）
 
 #### 2a. 财经新闻搜索 — em-finance-search
 
 ```bash
-python3 ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/get_data.py "搜索关键词"
+cd ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search
+/usr/bin/python3 scripts/get_data.py "搜索关键词"
 ```
 
 返回 JSON，关键字段：
@@ -87,7 +59,8 @@ python3 ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/g
 #### 2b. 市场热点发现 — em-market-hotspot
 
 ```bash
-python3 ~/.hermes/eastmoney-skills/stock-market-hotspot-discovery/stock-market-hotspot-discovery/scripts/get_data.py --query "今日A股市场热点"
+cd ~/.hermes/eastmoney-skills/stock-market-hotspot-discovery/stock-market-hotspot-discovery
+/usr/bin/python3 scripts/get_data.py --query "今日A股市场热点"
 ```
 
 返回 Markdown 表格，包含：
@@ -97,7 +70,8 @@ python3 ~/.hermes/eastmoney-skills/stock-market-hotspot-discovery/stock-market-h
 #### 2c. 宏观经济数据 — em-macro-data
 
 ```bash
-python3 ~/.hermes/eastmoney-skills/mx-macro-data/mx-macro-data/scripts/get_data.py --query "查询内容"
+cd ~/.hermes/eastmoney-skills/mx-macro-data/mx-macro-data
+/usr/bin/python3 scripts/get_data.py --query "查询内容"
 ```
 
 返回 CSV 文件，包含宏观经济指标。
@@ -105,16 +79,14 @@ python3 ~/.hermes/eastmoney-skills/mx-macro-data/mx-macro-data/scripts/get_data.
 
 ### 3. 早报专属 — 收益概览 + 盘前预测
 
-通过基金追踪 MCP 服务器调用：
+通过 `/tmp/mcp_call.py` 调用：
 
 ```bash
 # 持仓总览（总市值、昨日收益、累计收益、收益率）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/summary
+python3 /tmp/mcp_call.py get_summary
 
 # 主要指数实时数据（盘前/昨日收盘）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/indices
+python3 /tmp/mcp_call.py get_indices
 ```
 
 早报展示收益概览 + 盘前走势预测，格式：
@@ -122,7 +94,7 @@ curl -s $FUND_API/indices
 ```markdown
 ## 💰 收益概览
 
-> 数据来源：基金追踪工具
+> 数据来源：花花日记
 
 | 项目 | 金额 |
 |------|------|
@@ -155,20 +127,16 @@ curl -s $FUND_API/indices
 
 ```bash
 # 持仓总览
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/summary
+python3 /tmp/mcp_call.py get_summary
 
 # 持仓明细（每只基金的收益情况）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/records
+python3 /tmp/mcp_call.py get_records
 
 # 主要指数实时数据
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/indices
+python3 /tmp/mcp_call.py get_indices
 
 # 涨跌榜 + 板块概览
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/daily-rank
+python3 /tmp/mcp_call.py get_daily_rank
 ```
 
 晚报展示收益明细 + 大盘收盘 + 投资总结，格式：
@@ -176,7 +144,7 @@ curl -s $FUND_API/daily-rank
 ```markdown
 ## 💰 今日收益明细
 
-> 数据来源：基金追踪工具
+> 数据来源：花花日记
 
 | 项目 | 金额 |
 |------|------|
@@ -255,7 +223,7 @@ curl -s $FUND_API/daily-rank
 
 | 分类 | 来源 | 关键词/策略 |
 |------|------|------------|
-| 🤖 AI · 大模型 | 36氪、虎嗅、机器之心、量子位 | AI、大模型、GPT、Claude、Gemini、Agent、Sora、具身智能 |
+| 🤖 AI · 大模型 | 36氪、虎嗅、量子位 | AI、大模型、GPT、Claude、Gemini、Agent、Sora、具身智能 |
 | 💻 科技 · 数码 | 爱范儿、少数派、36氪、小众软件 | 手机、芯片、操作系统、消费电子、开发者工具 |
 | 📱 小米 · 生态 | 36氪、虎嗅、IT之家 | 小米、Redmi、MIUI、澎湃OS、SU7、米家、雷军 |
 | 🐙 GitHub · 开源 | GitHub Trending、少数派、小众软件 | trending、开源项目、新工具、开发者生态 |
@@ -266,7 +234,8 @@ curl -s $FUND_API/daily-rank
 **东财财经新闻抓取策略：**
 ```bash
 # 早报：搜索盘前消息
-python3 ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/get_data.py "今日A股市场重要公告和政策"
+cd ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search
+/usr/bin/python3 scripts/get_data.py "今日A股市场重要公告和政策"
 
 # 晚报：搜索收盘后消息
 /usr/bin/python3 scripts/get_data.py "今日A股收盘后重要公告"
@@ -281,6 +250,7 @@ python3 ~/.hermes/eastmoney-skills/mx-finance-search/mx-finance-search/scripts/g
 - 按关键词匹配分类，匹配不上的归入最接近分类
 - **每个分类至少 3 条，总计 20-30 条**
 - 去重：同一事件不同来源只保留一条
+- **屏蔽关键词**：华为、鸿蒙智行 — 凡标题或摘要包含这些词的新闻一律跳过
 - 每条格式：`**[{标题}]({链接})**：{1-2句摘要}`
 - 每个分类前 1-2 条加 🔥 标记为「必读」
 
@@ -312,7 +282,7 @@ tags:
 
 ---
 
-## 🌤 今日天气
+## 🌤 今日成都
 
 ☁️ **{天气描述}** {温度}°C　|　💧 {湿度}%　|　🌬 {风向} {风速}km/h
 
@@ -322,7 +292,7 @@ tags:
 
 ## 💰 收益概览
 
-> 数据来源：基金追踪工具
+> 数据来源：花花日记
 
 | 项目 | 金额 |
 |------|------|
@@ -406,7 +376,7 @@ tags:
 
 ---
 
-## 🌤 今日天气
+## 🌤 今日成都
 
 ☁️ **{天气描述}** {温度}°C　|　💧 {湿度}%　|　🌬 {风向} {风速}km/h
 
@@ -416,7 +386,7 @@ tags:
 
 ## 💰 今日收益明细
 
-> 数据来源：基金追踪工具
+> 数据来源：花花日记
 
 | 项目 | 金额 |
 |------|------|
@@ -436,7 +406,7 @@ tags:
 
 ## 📈 A 股收盘
 
-> 数据来源：基金追踪工具
+> 数据来源：花花日记
 
 | 指数 | 收盘 | 涨跌 |
 |------|------|------|
@@ -550,12 +520,11 @@ tags:
 
 ## 执行流程
 
-1. **获取天气**：`curl -s "wttr.in/{CITY}?format=j1&lang=zh"`
+1. **获取天气**：`curl -s "wttr.in/成都?format=j1&lang=zh"`
 2. **获取行情**：早报用 `get_summary` + `get_indices`；晚报用 `get_summary` + `get_records` + `get_indices` + `get_daily_rank`
-3. **获取东财数据**（可选，未安装则跳过）：
+3. **获取东财数据**：
    - 早报：`em-finance-search` 搜索盘前消息 + `em-market-hotspot` 获取热点
    - 晚报：`em-finance-search` 搜索收盘后消息 + `em-market-hotspot` 获取热点复盘
-   - 如未安装东财 skill 或 `EM_API_KEY` 未配置，跳过此步骤，早晚报仍可正常生成
 4. **抓取新闻**：用 `web_extract` 逐个抓取新闻源首页 + 东财财经新闻
 5. **组装 Markdown**：按模板填充数据，合并重叠板块
 6. **智能标签**：根据笔记内容自动提取关键词，更新 frontmatter tags（参考 obsidian-auto-tags skill）
@@ -566,7 +535,7 @@ tags:
     - `cd ~/obsidian-vault && ob sync` — 同步到 Obsidian Cloud（手机端可见）
     - `cd ~/obsidian-vault && git add -A && git commit -m "feat: {描述}" && git push` — 推送到 GitHub（博客依赖此步骤）
     - ⚠️ `ob sync` 和 `git push` 是两回事！只做 ob sync 不会推到 GitHub，博客就不会更新。
-11. **⚠️ 同步博客**：git push 后，`notify-blog.yml` 会自动触发博客 `deploy.yml` 部署。确认部署完成：`cd ~/{YOUR_BLOG_REPO} && gh run list --limit 1`。如需手动触发，执行 `cd ~/{YOUR_BLOG_REPO} && git commit --allow-empty -m "sync: trigger deploy" && git push`。
+11. **⚠️ 同步博客**：git push 后，`notify-blog.yml` 会自动触发博客 `deploy.yml` 部署。确认部署完成：`cd ~/baiye1997.github.io && gh run list --limit 1`。如需手动触发，执行 `cd ~/baiye1997.github.io && git commit --allow-empty -m "sync: trigger deploy" && git push`。
 
 ### 增量更新 README 的逻辑
 
@@ -629,7 +598,7 @@ schedule: "0 20 * * 1-5"
 - **⚠️ 天气 curl 被安全扫描拦截**：`curl` 命令访问 wttr.in 会被安全扫描器拦截（非 ASCII 路径 + 无 scheme URL）。**备用方案**：用 `browser_navigate` 打开任意页面，再通过 `browser_console` 执行 `fetch()`：
   ```js
   (async () => {
-    const r = await fetch('https://wttr.in/{CITY}?format=j1&lang=zh');
+    const r = await fetch('https://wttr.in/Chengdu?format=j1&lang=zh');
     return await r.json();
   })()
   ```
@@ -637,6 +606,7 @@ schedule: "0 20 * * 1-5"
 - **新闻时效性**：只抓取当天或前一天的新闻，超过 2 天的一律跳过。优先选择当日发布的文章，标题或正文包含明确日期的优先校验。
 - 非交易日跳过 A 股板块（用 `get_status` 判断 `is_trading_day`）
 - 新闻抓取可能失败，每个源独立 try-catch，失败则跳过该源
+- **⚠️ 机器之心 (jiqizhixin.com) 已停更**：2026年4月确认，该站已转型为数据服务平台，所有页面重定向到落地页，不再公开发布文章。新闻源已移除，不再抓取。
 - 天气 API 偶尔超时，设置 10s 超时，失败则显示"天气数据暂不可用"
 - 东财 API 可能返回空结果或错误，失败则跳过该数据源，不影响其他内容生成
 - 文件写入后自动更新 README 并 `ob sync`，确保 Obsidian 端同步
@@ -648,4 +618,4 @@ schedule: "0 20 * * 1-5"
   terminal("python3 -c \"import os; d=os.path.expanduser('~/obsidian-vault/🏔️ 山水邸报/'); files=os.listdir(d); print(len(files))\"")
   ```
   或用 `execute_code` 中直接 `import os` + `os.listdir()`/`os.walk()`/`os.path.exists()`。
-- **⚠️ delegate_task 并发上限为 3**：子代理最多同时运行 3 个。抓取新闻时将 11 个来源分组为 3 批：(1) 36氪 (2) 虎嗅+爱范儿+少数派+IT之家 (3) 果壳+机器之心+量子位+GitHub+联合早报。超出会报错 `Too many tasks`。
+- **⚠️ delegate_task 并发上限为 3**：子代理最多同时运行 3 个。抓取新闻时将 10 个来源分组为 3 批：(1) 36氪 (2) 虎嗅+爱范儿+少数派+IT之家 (3) 果壳+量子位+GitHub+联合早报。超出会报错 `Too many tasks`。

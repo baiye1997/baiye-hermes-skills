@@ -1,55 +1,31 @@
 ---
 name: investment-weekly
-description: 投资周报 — 每周日自动汇总本周山水邸报+基金持仓数据，生成投资周报写入 Obsidian
+description: 投资周报 — 每周日自动汇总本周山水邸报+花花日记持仓数据，生成投资周报写入 Obsidian
 tags: [obsidian, finance, weekly, investment]
 ---
 
 # 投资周报
 
-每周日自动生成投资周报，整合基金持仓数据和山水邸报市场信息。
-
-> ⚠️ 此 skill 为**可选功能**，需要基金追踪 API 支持。不配置也能使用其他所有 skill。
-
-## 可选依赖
-
-### 基金追踪 API
-
-需要配置基金追踪服务，设置环境变量：
-
-```bash
-export FUND_API="your_fund_api_endpoint"
-```
-
-API 需支持以下接口：
-- `GET /summary` — 持仓总览
-- `GET /records` — 持仓明细
-- `GET /overview` — 大盘指数
-- `GET /daily-rank` — 涨跌榜
-- `GET /fund-timeline?code=xxx&days=7` — 基金历史净值
+每周日自动生成投资周报，整合花花日记持仓数据和山水邸报市场信息。
 
 ## 数据来源
 
-### 基金追踪 API — 主要数据源
+### 花花日记（通过 /tmp/mcp_call.py）— 主要数据源
 ```bash
 # 持仓总览（总市值、累计收益、今日收益等）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/summary
+python3 /tmp/mcp_call.py get_summary
 
 # 持仓明细（每只基金的收益、收益率、持仓）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/records
+python3 /tmp/mcp_call.py get_records
 
 # 大盘指数（上证、深证、创业板、恒生、纳指等）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/overview
+python3 /tmp/mcp_call.py get_overview
 
 # 涨跌榜
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/daily-rank
+python3 /tmp/mcp_call.py get_daily_rank
 
 # 指定基金历史净值（用于计算周涨幅）
-# Requires: fund-tracking MCP server
-curl -s $FUND_API/fund-timeline '{"code":"基金代码","days":7}'
+python3 /tmp/mcp_call.py get_fund_timeline '{"code":"基金代码","days":7}'
 ```
 
 ### 山水邸报 — 仅用于市场事件补充
@@ -58,7 +34,7 @@ curl -s $FUND_API/fund-timeline '{"code":"基金代码","days":7}'
 
 ## 执行流程
 
-1. **拉取基金数据**：get_summary + get_records + get_overview
+1. **拉取花花日记数据**：get_summary + get_records + get_overview
 2. **计算周度收益**：对比本周与上周的 summary 数据（需保存上周快照）
 3. **扫描本周邸报**：仅提取大事记事件
 4. **汇总分析**：板块轮动、持仓表现、市场热点
