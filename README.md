@@ -12,7 +12,7 @@
 
 | Skill | 说明 | 定时 | 依赖 |
 |-------|------|------|------|
-| [shan-shui-di-bao](skills/shan-shui-di-bao/) | 山水邸报 — 每日早晚报，整合天气/A股/财经新闻/板块热点 | 工作日 08:00 / 20:00 | [东财 API](#可选依赖)（可选） + [花花日记](https://github.com/baiye1997/HuaHuaDailyMCP) |
+| [shan-shui-di-bao](skills/shan-shui-di-bao/) | 山水邸报 — 每日早晚报，整合天气/A股/财经新闻/板块热点 | 工作日 08:00 / 20:00 | [东财 API](https://ai.eastmoney.com/mxClaw)（可选） + [花花日记](https://github.com/baiye1997/HuaHuaDailyMCP) |
 | [weekly-must-read](skills/weekly-must-read/) | 本周必读 — 从山水邸报提取 🔥 必读文章，按周汇总 | 每周日 10:00 | 依赖山水邸报 |
 
 ### 💰 投资（可选）
