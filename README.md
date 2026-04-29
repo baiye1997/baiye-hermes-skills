@@ -2,7 +2,7 @@
 
 一套基于 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 的 Skill 集合，主打 **AI + Obsidian 生活管理系统**。
 
-> 🔍 配套 iOS 基金管理工具：[花花日记](https://github.com/baiye1997/HuaHuaDailyMCP)
+> 🔍 配套全平台基金管理工具：[花花日记](https://github.com/baiye1997/HuaHuaDailyMCP)
 
 ---
 
@@ -141,7 +141,7 @@ export EM_API_KEY="your_api_key"
 
 用于 `investment-weekly` 的持仓收益数据和 `shan-shui-di-bao` 的收益展示。
 
-iOS 基金管理工具，通过 MCP 接口提供持仓数据。详情见 [花花日记](https://github.com/baiye1997/HuaHuaDailyMCP)。
+全平台基金管理工具。[HuaHuaDailyMCP](https://github.com/baiye1997/HuaHuaDailyMCP) 是为其配套的 MCP Server，提供持仓数据接口。
 
 > 💡 不配置也能使用其他所有 skill。
 
