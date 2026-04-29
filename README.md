@@ -134,10 +134,10 @@ export EM_API_KEY="your_api_key"
 
 1. 申请 API Key：https://ai.eastmoney.com/mxClaw
 2. 配置环境变量：`export EM_API_KEY="your_key"`
-3. 安装东财 skill（从 [ClawHub](https://ai.eastmoney.com/mxClaw) 下载）：
-   - `em-finance-search` — 财经新闻搜索
-   - `em-market-hotspot` — 市场热点发现
-   - `em-macro-data` — 宏观经济数据（可选）
+3. 安装东财 skill（从 ClawHub 下载）：
+   - [mx-finance-search](https://clawhub.ai/skills/mx-mx-finance-search) — 财经新闻搜索
+   - [stock-market-hotspot-discovery](https://clawhub.ai/skills/stock-market-hotspot-discovery) — 市场热点发现
+   - [mx-macro-data](https://clawhub.ai/skills/mx-mx-macro-data) — 宏观经济数据（可选）
 
 > 不配置也能使用山水邸报，只是缺少财经新闻板块。
 ### 花花日记（持仓数据）
