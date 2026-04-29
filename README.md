@@ -19,7 +19,7 @@
 
 | Skill | 说明 | 定时 | 依赖 |
 |-------|------|------|------|
-| [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总持仓数据+市场信息，生成周度复盘 | 每周日 10:15 | [基金追踪 API](#可选依赖) |
+| [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总花花日记持仓+山水邸报市场信息，生成周度复盘 | 每周日 10:15 | [花花日记](#花花日记) |
 
 ### 📝 笔记
 
@@ -109,9 +109,6 @@ cp -r baiye-hermes-skills/templates/obsidian-vault ~/obsidian-vault
 ```bash
 # 东方财富 API（用于财经新闻和市场数据）
 export EM_API_KEY="your_api_key"
-
-# 基金追踪 API（用于持仓数据，可选）
-export FUND_API="your_fund_api_endpoint"
 ```
 
 ### 通勤提醒配置
@@ -138,14 +135,13 @@ export FUND_API="your_fund_api_endpoint"
 2. 获取 API Key
 3. 配置：`export EM_API_KEY="your_key"`
 4. 安装东财 skill：[em-finance-search](https://github.com/anthropic/...), [em-market-hotspot](https://github.com/anthropic/...)
-
 > 💡 不配置也能使用山水邸报，只是缺少财经新闻板块。
 
-### 基金追踪 API（持仓数据）
+### 花花日记（持仓数据）
 
-用于 `investment-weekly` 和 `shan-shui-di-bao` 的收益展示。
+用于 `investment-weekly` 的持仓收益数据和 `shan-shui-di-bao` 的收益展示。
 
-需自建或使用第三方基金追踪服务，暴露 REST API。
+iOS 基金管理工具，通过 MCP 接口提供持仓数据。详情见 [花花日记](https://github.com/baiye1997)。
 
 > 💡 不配置也能使用其他所有 skill。
 
