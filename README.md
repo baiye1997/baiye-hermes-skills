@@ -132,12 +132,14 @@ export EM_API_KEY="your_api_key"
 
 用于 `shan-shui-di-bao` 的财经新闻板块。
 
-1. 注册：https://ai.eastmoney.com/mxClaw
-2. 获取 API Key
-3. 配置：`export EM_API_KEY="your_key"`
-4. 安装东财 skill：[em-finance-search](https://ai.eastmoney.com/mxClaw), [em-market-hotspot](https://ai.eastmoney.com/mxClaw)
-> 💡 不配置也能使用山水邸报，只是缺少财经新闻板块。
+1. 申请 API Key：https://ai.eastmoney.com/mxClaw
+2. 配置环境变量：`export EM_API_KEY="your_key"`
+3. 安装东财 skill（从 [ClawHub](https://ai.eastmoney.com/mxClaw) 下载）：
+   - `em-finance-search` — 财经新闻搜索
+   - `em-market-hotspot` — 市场热点发现
+   - `em-macro-data` — 宏观经济数据（可选）
 
+> 不配置也能使用山水邸报，只是缺少财经新闻板块。
 ### 花花日记（持仓数据）
 
 用于 `investment-weekly` 的持仓收益数据和 `shan-shui-di-bao` 的收益展示。
