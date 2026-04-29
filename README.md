@@ -1,6 +1,6 @@
 # Baiye Hermes Skills
 
-一套基于 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 的自研 Skill 集合，主打 **AI + Obsidian 生活管理系统**。
+一套基于 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 的 Skill 集合，主打 **AI + Obsidian 生活管理系统**。
 
 > 🔍 配套 iOS 基金管理工具：[花花日记](https://github.com/baiye1997)
 
