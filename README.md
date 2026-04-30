@@ -10,21 +10,21 @@
 
 ### 📰 信息流
 
-| Skill | 说明 | 定时 | 依赖 | 依赖 |
-|-------|------|------|------|------|
+| Skill | 说明 | 定时 | 依赖 |
+|-------|------|------|------|
 | [shan-shui-di-bao](skills/shan-shui-di-bao/) | 山水邸报 — 每日早晚报，整合天气/A股/财经新闻/板块热点 | 工作日 08:00 / 20:00 | [东财 API](https://ai.eastmoney.com/mxClaw)（可选） + [花花日记](https://github.com/baiye1997/HuaHuaDailyMCP) |
 | [weekly-must-read](skills/weekly-must-read/) | 本周必读 — 从山水邸报提取 🔥 必读文章，按周汇总 | 每周日 10:00 | 依赖山水邸报 |
 
 ### 💰 投资（可选）
 
-| Skill | 说明 | 定时 | 依赖 | 依赖 |
-|-------|------|------|------|------|
+| Skill | 说明 | 定时 | 依赖 |
+|-------|------|------|------|
 | [investment-weekly](skills/investment-weekly/) | 投资周报 — 汇总花花日记持仓+山水邸报市场信息，生成周度复盘 | 每周日 10:15 | [花花日记](https://github.com/baiye1997/HuaHuaDailyMCP) |
 
 ### 📝 笔记
 
 | Skill | 说明 | 触发 |
-|-------|------|------|------|
+|-------|------|------|
 | [daily-recap](skills/daily-recap/) | 每日对话回顾 — 自动总结对话，生成个人日记 | 每天 23:00 |
 | [idea-capture](skills/idea-capture/) | 灵感捕捉 — 快速记录想法，自动分类打标签 | 手动 |
 | [reading-tracker](skills/reading-tracker/) | 阅读追踪 — 管理阅读清单和进度 | 手动 |
@@ -42,11 +42,12 @@
 | Skill | 说明 | 定时 | 依赖 |
 |-------|------|------|------|
 | [commute-reminder](skills/commute-reminder/) | 通勤提醒 — 天气+路况+今日事项 | 工作日 08:00 / 17:30 | [高德地图 API](https://lbs.amap.com/)（路况查询） |
+| [amap-lbs-skill](skills/amap-lbs-skill/) | 高德地图综合服务 — POI搜索/路径规划/旅游规划/热力图 | 手动 | [高德地图 API](https://lbs.amap.com/) |
 
 ### 🎬 创作
 
 | Skill | 说明 | 触发 |
-|-------|------|------|------|
+|-------|------|------|
 | [social-media-video-scripts](skills/social-media-video-scripts/) | 视频脚本 — 适配抖音/B站/小红书 | 手动 |
 
 ---
