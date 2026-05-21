@@ -103,6 +103,6 @@ schedule: "0 10 * * 0"
 ### 博客同步格式
 ```bash
 # 写入博客笔记目录
-cp ~/obsidian-vault/📖\ 本周必读/{filename}.md ~/baiye1997.github.io/src/content/notes/📖\ 本周必读/{filename}.md
-cd ~/baiye1997.github.io && git add -A && git commit -m "sync: 本周必读" && git push
+cp ~/obsidian-vault/📖\ 本周必读/{filename}.md ~/project/blog/src/content/notes/📖\ 本周必读/{filename}.md
+cd ~/project/blog && npm run build && git add -A && git commit -m "sync: 本周必读" && git push
 ```
