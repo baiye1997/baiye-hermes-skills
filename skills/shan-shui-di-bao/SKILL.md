@@ -95,8 +95,6 @@ cd ~/.hermes/eastmoney-skills/mx-macro-data/mx-macro-data
 
 ### 3. 早报专属 — 收益概览 + 盘前预测
 
-**⚠️ 必须通过 `/tmp/mcp_call.py` 调用花花日记 MCP，不要使用 native MCP 工具（config.yaml 中已移除 huahua-daily 的 native MCP 配置）。脚本从 config.yaml 动态读取 token，每次启动独立进程，最可靠。**
-
 调用方式（通过 `terminal` 工具）：
 
 ```bash
@@ -142,8 +140,6 @@ python3 /tmp/mcp_call.py get_indices
 ```
 
 ### 3b. 晚报专属 — 收益明细 + 大盘收盘 + 投资总结
-
-**⚠️ 同上，必须通过 `/tmp/mcp_call.py` 调用，不要使用 native MCP 工具。**
 
 ```bash
 # 持仓总览
@@ -239,7 +235,7 @@ python3 /tmp/mcp_call.py get_daily_rank
 1. **网页抓取**（20-25条）：覆盖 AI、科技、小米、GitHub、历史、时政
 2. **东财财经新闻**（5-8条）：专注财经、政策、板块动态
 
-使用 `execute_code` + Python `urllib.request` 抓取以下来源（**不推荐 `delegate_task` 抓取新闻，mimo 模型经常只描述操作而不实际执行 web 工具**），**每个分类至少 3 条，总计 20-30 条**。每个源的详细抓取代码见 `references/news-sources.md`。
+使用 `execute_code` + Python `urllib.request` 抓取以下来源**每个分类至少 3 条，总计 20-30 条**。每个源的详细抓取代码见 `references/news-sources.md`。
 
 | 分类 | 来源 | 抓取方式 | 可靠性 |
 |------|------|---------|--------|
@@ -288,19 +284,17 @@ EM_API_KEY=$EM_API_KEY /usr/bin/python3 scripts/get_data.py "今日A股收盘后
 - 优先选择与基金投资相关的政策、宏观数据、板块动态
 
 **网页抓取策略：**
-- **⚠️ 不要用 `delegate_task` 抓取新闻**：mimo 模型经常只描述操作步骤而不实际调用 web 工具，导致子代理返回空结果。应直接在主代理中用 `execute_code` + Python `urllib.request` 抓取。
 - 用 Python `urllib.request` 抓取每个源首页，提取文章标题+链接
 - **36氪必须用 RSS**：`https://36kr.com/feed`（XML 格式），用 `xml.etree.ElementTree` 解析 `<item>` 中的 `<title>`、`<link>`、`<description>`。SPA 首页返回空 HTML。
 - **爱范儿**：提取 `<h2>`/`<h3>` 标签内容作为标题，关联最近的 `<a href="https://www.ifanr.com/NNNNN">` 链接
-- **IT之家**：首页文章使用 `lapin.ithome.com` 格式，提取 `<a href="https://lapin.ithome.com/html/digi/NNNNN.htm">TEXT</a>` 中的标题和链接。⚠️ 多为产品推荐，非深度新闻，作为补充源。
-- **联合早报**：URL 模式为 `/news/china/story{YYYYMMDD}-{ID}` 或 `/news/world/story{...}`。**实际可用方案**：列表页的 `<h2>`/`<h3>` 标签包含文章标题，用 `re.findall(r'<h[23][^>]*>(.*?)</h[23]>', html, re.DOTALL)` 提取标题，再在标题位置附近搜索 `href="(/news/(?:china|world)/story[^"]*)"` 关联链接。**⚠️ 不要逐篇抓取文章页**——列表页的 h2/h3 + 附近链接已足够，且更可靠。
+- **IT之家**：首页文章使用 `lapin.ithome.com` 格式，提取 `<a href="https://lapin.ithome.com/html/digi/NNNNN.htm">TEXT</a>` 中的标题和链接。
+- **联合早报**：URL 模式为 `/news/china/story{YYYYMMDD}-{ID}` 或 `/news/world/story{...}`。**实际可用方案**：列表页的 `<h2>`/`<h3>` 标签包含文章标题，用 `re.findall(r'<h[23][^>]*>(.*?)</h[23]>', html, re.DOTALL)` 提取标题，再在标题位置附近搜索 `href="(/news/(?:china|world)/story[^"]*)"` 关联链接。
 - **量子位**：需 User-Agent，标题在 `<h2>`/`<h3>` 标签中。**⚠️ 文章链接可能提取不到**（0个 href 匹配）——量子位的 `<a>` 标签可能使用 JS 渲染或不同 URL 模式。此时只保留标题，链接用 `https://www.qbitai.com/` 作为占位。标题本身已足够识别文章。
 - **必须生成摘要**：每条新闻用 1-2 句话概括核心内容，不能只放标题
 - **⚠️ 逐篇抓取文章摘要不可靠**：对 36氪、爱范儿等 SPA 站点，单独抓取文章页面提取 `<meta name="description">` 经常返回空结果（页面依赖 JS 渲染）。**可靠策略**：
   - 36氪：RSS 的 `<description>` 字段已含摘要，直接使用，无需逐篇抓取
   - 爱范儿/IT之家：列表页的标题+上下文已足够概括，摘要可从标题本身推导
   - 联合早报：文章页 `<title>` 可靠，但 meta description 不一定有
-  - **不要浪费时间抓取每篇文章页面来生成摘要**——从标题+RSS描述+上下文推导 1-2 句摘要即可
 - **⚠️ HTML 实体清理**：爱范儿、量子位等源的标题可能包含 `&#038;`（&）、`&amp;`、`&lt;`、`&gt;` 等 HTML 实体。在分类前必须统一清理：`title = html.unescape(title)` 或用正则 `re.sub(r'&#\d+;', lambda m: chr(int(m.group(1)[2:-1])), title)` 处理数字实体。
 - 按关键词匹配分类，匹配不上的归入最接近分类
 - **⚠️ 自动分类经常不均匀**：关键词匹配容易把大量 items 归入「科技·数码」或「AI」（因为很多科技新闻都含手机/芯片/AI等关键词），导致其他分类空缺。**实战验证的策略**（2026-05-18）：
@@ -557,13 +551,13 @@ tags:
 - **⚠️ 标题中禁止包含 URL 敏感字符：`%` `#` `?` `&` `=` `+` `/` `\` 等**。这些字符会导致 Astro 博客构建时 `URIError: URI malformed` 或 `NoMatchingStaticPathFound` 错误。例如"油价飙涨8%"应改为"油价飙涨"或"油价飙涨逾八成"。
 - 示例：
   - `2026-04-24-早报-美伊升温叠加美股收跌.md`
-  - `2026-04-23-晚报-GPT5.5信息泄露引爆AI圈.md`
+  - `2026-04-23-晚报-美联储暗示暂停加息.md`
   - `2026-04-21-早报-苹果换帅与大疆Pocket4引爆科技圈.md`
 
 **frontmatter 必须包含 title 字段，tags 用 YAML 列表格式：**
 ```yaml
 ---
-title: 美伊局势升温叠加美股收跌，OpenAI 发布 GPT-5.5
+title: 美伊局势升温叠加美股收跌，央行宣布降准
 date: 2026-04-24 星期四
 type: 早报
 weather: 晴朗 17°C-27°C
@@ -589,7 +583,7 @@ tags:
 3. **获取东财数据**：
    - 早报：`em-finance-search` 搜索盘前消息 + `em-market-hotspot` 获取热点
    - 晚报：`em-finance-search` 搜索收盘后消息 + `em-market-hotspot` 获取热点复盘
-4. **抓取新闻**：用 `web_extract` 逐个抓取新闻源首页 + 东财财经新闻
+4. **抓取新闻**：用 `execute_code` + Python `urllib.request` 逐个抓取新闻源首页 + 东财财经新闻
 5. **组装 Markdown**：按模板填充数据，合并重叠板块
 6. **智能标签**：根据笔记内容自动提取关键词，更新 frontmatter tags（参考 obsidian-auto-tags skill）
 7. **写入文件**：用 `execute_code` + `from hermes_tools import write_file` 写入 vault 路径（**推荐方式**，避免安全扫描器拦截 emoji 路径）：
@@ -756,6 +750,7 @@ schedule: "30 22 * * *"
 
 ## 注意事项
 
+- **⚠️ 中国市场涨跌配色**：🔴 表示涨，🟢 表示跌（红涨绿跌，与西方相反）。展示行情、收益、夜盘估值、持仓明细时必须用此配色。示例：`🔴 +1.23%`、`🟢 -0.56%`。
 - **⚠️ 博客隐私脱敏**：早晚报同步到博客时，deploy workflow 会自动移除收益相关段落（收益概览、收益明细、持仓明细、盘前走势预测、投资总结中的收益归因）。Vault 保留完整版，博客只展示公开内容。
 - **⚠️ 文件命名必须用精华标题**：不要用"新闻速递"这种泛泛的标题，从当日新闻提炼 1-2 个核心事件凝练成标题。frontmatter 必须包含 `title` 字段。
 - **⚠️ 改名/新增笔记后必须执行步骤 8-10**：更新 README 索引 → 更新主索引 + graph.md → ob sync。不可跳过。
@@ -776,7 +771,6 @@ schedule: "30 22 * * *"
        return await r.json();
      })()
      ```
-  3. ~~curl~~：被安全扫描器拦截（非 ASCII 路径 + 无 scheme URL），不推荐
   - 注意：`browser_navigate` 在容器环境中可能因 Chrome sandbox 问题失败，此时必须用方案 1
 - **新闻时效性**：只抓取当天或前一天的新闻，超过 2 天的一律跳过。优先选择当日发布的文章，标题或正文包含明确日期的优先校验。
 - 非交易日跳过 A 股板块（用 `get_status` 判断 `is_trading_day`）
@@ -785,30 +779,10 @@ schedule: "30 22 * * *"
   - **⚠️ MCP 二进制执行失败（2026-05-20 验证）**：容器环境中 `huahua-daily` 二进制可能完全无法执行，stderr 输出 `realpath: not found` / `dirname: not found` / `exec: /python: not found`。这是容器环境缺少系统命令导致的，与 token 或网络无关。**表现**：`mcp_call.py` 返回 `{"error": "MCP no result", "stderr_tail": "realpath: not found..."}`。**处理方式**：与超时同等处理——立即放弃所有 MCP 调用，跳过收益/行情板块。不要尝试修复二进制，这是环境问题。
   - **⚠️ MCP 可能返回空输出而非超时**：`mcp_call.py` 有时 rc=0 但 stdout/stderr 均为空字符串（API 端点不可达但进程正常退出）。检测方法：`if not result.stdout.strip():` 即视为失败，与超时同等处理——跳过所有 MCP 调用。
   - **⚠️ MCP Token 过期信号（2026-05-18 验证）**：如果 `get_summary` 返回 JSON 中 `isError: true` 且文本含 "Token 无效或已过期"，**先检查 mcp_call.py 是否硬编码了旧 token**（对比 config.yaml），而不是直接让用户重新生成。mcp_call.py 应从 config.yaml 动态读取 token（见下方 mcp_call.py 正确模式）。确认 token 一致后再判断是否真的过期。
-  - **⚠️ mcp_call.py 正确模式（2026-05-20 修复）**：旧版有两个 bug：(1) 硬编码 token 导致 config.yaml 更新后不同步；(2) `proc.stdin.close()` 后直接 `proc.stdout.read()` 会死锁（MCP server 响应慢时 stdin 关闭导致 server 不再输出）。正确写法：
-    ```python
-    # 1. 从 config.yaml 动态读取 token
-    config_path = os.path.expanduser("~/.hermes/config.yaml")
-    token = None
-    with open(config_path) as f:
-        for line in f:
-            if "HUAHUA_AGENT_TOKEN:" in line:
-                token = line.split("HUAHUA_AGENT_TOKEN:", 1)[1].strip()
-                break
-    # 2. 发送所有消息后，sleep 8s 再关闭 stdin（给 server 时间处理）
-    for msg in messages:
-        proc.stdin.write((json.dumps(msg) + "\n").encode())
-        proc.stdin.flush()
-    time.sleep(8)
-    proc.stdin.close()
-    # 3. 然后读取输出
-    output = proc.stdout.read().decode()
-    ```
+  - **⚠️ mcp_call.py 正确模式（2026-05-20 修复）**：旧版有两个 bug：(1) 硬编码 token 导致 config.yaml 更新后不同步；(2) `proc.stdin.close()` 后直接 `proc.stdout.read()` 会死锁。正确写法见 `scripts/mcp_call.py`（从 config.yaml 动态读取 token，发送消息后 sleep 8s 再关闭 stdin）。
 - **⚠️ `python3` 命令可能不存在**：容器环境中 `python3` 不在 PATH，需用 `/usr/bin/python3`。subprocess 调用示例：`subprocess.run(['/usr/bin/python3', '/tmp/mcp_call.py', 'get_summary'], ...)`
 - **⚠️ GitHub Trending HTML 提取模式不稳定**：`<article class="Box-row">` 模式可能匹配不到内容。**可靠方案**：用正则 `re.findall(r'href="/([a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+)"', html)` 提取所有 repo 链接，过滤掉非 repo 路径，保留 `user/repo` 格式的链接。**完整排除列表**：`login, signup, features, topics, collections, events, sponsors, enterprise, trending, explore, pricing, security, team, pulls, issues, wiki, notifications, settings, new, import, premium, copilot, github, codespaces, copilot-features, blog, about, customer-stories, partners, careers, home, apps`。⚠️ `apps` 是关键排除项——GitHub 的 `apps/github-actions`、`apps/dependabot`、`apps/autofix-ci` 等不是真正的仓库，必须排除。
   - **⚠️ `login?return_to=` 陷阱（2026-05-20 验证）**：GitHub Trending 页面的 `<a href>` 有时指向 `/login?return_to=%2Fuser%2Frepo` 格式。正则匹配后 split('/') 得到含 `?` 或 `%2F` 的路径段。**修复**：在排除列表匹配后追加 `if '?' in part or '%2F' in part: continue`，直接丢弃含查询参数或 URL 编码的路径。同时排除列表需追加 `login` 和 `sponsors`（`sponsors/obra` 等是赞助页不是仓库）。
-- **⚠️ 虎嗅 (huxiu.com) 被 WAF 拦截**：返回验证页面，无法直接 curl 抓取。该源应标记为不可靠，抓取失败时直接跳过。
-- **⚠️ 量子位 (qbitai.com) 需要 User-Agent**：首次无 UA 请求返回 0 字节。加 `-H 'User-Agent: Mozilla/5.0'` 即可正常获取。
 - **⚠️ 机器之心 (jiqizhixin.com) 已停更**：2026年4月确认，该站已转型为数据服务平台，所有页面重定向到落地页，不再公开发布文章。新闻源已移除，不再抓取。
 - 天气 API 偶尔超时，设置 10s 超时，失败则显示"天气数据暂不可用"
 - 东财 API 可能返回空结果或错误，失败则跳过该数据源，不影响其他内容生成
@@ -824,4 +798,4 @@ schedule: "30 22 * * *"
 - **⚠️ execute_code 300s 超时陷阱**：`execute_code` 有 300s 硬超时。如果在单次调用中同时抓取多个新闻源 + 分类 + 生成报告，很容易超时。**策略**：将工作拆分为 2-3 个阶段：(1) 抓取所有新闻源（~10s），(2) 分类+生成报告+写入文件（~5s），(3) 更新索引+同步（~10s）。不要试图在一个脚本中完成所有事。
 - **⚠️ MCP 快速失败策略**：不要依次调用 get_summary → get_records → get_indices → get_daily_rank（共 4×30s = 120s 浪费）。**正确做法**：先调用 get_summary，如果 30s 内超时，立即放弃所有 MCP 调用，跳过收益/行情板块。只在 get_summary 成功时才继续调用其余接口。
 - **⚠️ 不要使用 native MCP 工具调用花花日记**：config.yaml 中已移除 huahua-daily 的 native MCP 配置（因为连接不稳定）。所有 MCP 调用必须通过 `terminal("python3 /tmp/mcp_call.py get_summary '{}'")` 方式执行。脚本从 config.yaml 读取 token，每次启动独立 uvx 进程，最可靠。
-- **⚠️ delegate_task 并发上限为 3**：子代理最多同时运行 3 个。但更关键的问题是：**mimo 模型的子代理经常不执行 web 工具**，只返回描述性文本。抓取新闻应直接在主代理中用 `execute_code` + Python 完成，不要依赖 `delegate_task`。
+- **⚠️ delegate_task 并发上限为 3**：子代理最多同时运行 3 个。但更关键的问题是：**部分模型的子代理经常不执行 web 工具**，只返回描述性文本。抓取新闻应直接在主代理中用 `execute_code` + Python 完成，不要依赖 `delegate_task`。

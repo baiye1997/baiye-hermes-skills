@@ -10,9 +10,9 @@ tags: [commute, weather, daily, reminder, cron]
 
 ## 地址信息
 
-- **起点**：{你的家庭地址}
+- **起点**：成都市双流区万科·海悦汇城西区(北门)
   - 坐标：`104.081051,30.492130`
-- **终点**：{你的公司地址}
+- **终点**：四川省成都市双流区雅和街411号
   - 坐标：`104.079137,30.511159`
 
 ## 执行步骤
@@ -31,7 +31,7 @@ curl -s "https://wttr.in/Chengdu?format=%C+%t+%h+%w&lang=zh"
 
 ```bash
 # 1. 地理编码获取坐标（AMAP_WEB_KEY 从环境变量读取）
-curl -s "https://restapi.amap.com/v3/geocode/geo?address={地址}&key=${AMAP_WEBSERVICE_KEY}"
+curl -s "https://restapi.amap.com/v3/geocode/geo?address={地址}&key=***"
 
 # 2. 用 route-planning.js 规划驾车路线（坐标格式: 经度,纬度）
 cd ~/.hermes/skills/amap-lbs-skill
@@ -88,7 +88,7 @@ date '+%Y-%m-%d %A'
 穿衣建议：{建议} | {是否带伞}
 
 🚦 通勤路况
-📍 起点：{家庭地址简称} → 终点：{公司地址简称}
+📍 起点：万科·海悦汇城 → 终点：雅和街
 📏 全程 {距离} | ⏱ 预计用时 {时间}
 🚦 路况：{路况描述}
 建议出发：{时间}
@@ -110,7 +110,7 @@ date '+%Y-%m-%d %A'
 {天气描述} {温度}°C | {是否需要带外套}
 
 🚗 回家路况
-起点：{公司地址简称} → 终点：{家庭地址简称}
+起点：雅和街 → 终点：万科·海悦汇城
 预计用时：{N} 分钟 | 路况：{畅通/拥堵}
 ```
 
@@ -118,14 +118,3 @@ date '+%Y-%m-%d %A'
 
 - 早间：`schedule: "0 8 * * 1-5"`
 - 晚间：`schedule: "30 17 * * 1-5"`
-
-## 已知 Pitfalls
-
-| 问题 | 原因 | 解决 |
-|------|------|------|
-| `wttr.in/成都` 被拦截 | 中文 URL 路径触发安全扫描 | 用 `wttr.in/Chengdu` |
-| `gaode_skill.py` 报 Socket 错误 | 需要运行中的 Electron 应用 | 用 REST API + `route-planning.js` |
-| `curl \| python3` 被拦截 | 管道到解释器触发安全扫描 | 保存到文件再处理 |
-| `get_data.py --query` 报错 | 参数不支持 `--query` | 直接跟搜索词，不加 flag |
-| Brave Search 422 错误 | API Key 失效或未导出 | 先 `source ~/.bashrc`，失效则用 eastmoney |
-| `web_search` 工具不存在 | 环境中无此工具 | 用 brave-search skill 或 eastmoney |
