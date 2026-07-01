@@ -164,7 +164,7 @@ export EM_API_KEY="your_api_key"
 用于 `social-media-video-scripts` 生成 X/Twitter 发布草稿、串文和发布前检查。
 
 ```bash
-hermes plugins install Xquik-dev/hermes-tweet
+hermes plugins install Xquik-dev/hermes-tweet --enable
 export XQUIK_API_KEY="your_api_key"
 ```
 
