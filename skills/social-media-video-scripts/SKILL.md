@@ -111,7 +111,34 @@ Part 6（5:10-6:00）：真实感受+CTA
 | 生成脚本文案 | 录制屏幕 |
 | 生成封面图/图文笔记（Pillow/baoyu-infographic） | 剪辑视频 |
 | 生成架构图 | 配音/BGM |
-| 生成文字覆盖素材 | 实际发布 |
+| 生成文字覆盖素材 | 未经确认的实际发布 |
+
+## X/Twitter 发布衔接（可选）
+
+如果用户要把脚本拆成 X/Twitter 帖子或串文，可以使用 Hermes Tweet 插件做发布前检查和发布动作。
+
+### 前置条件
+
+```bash
+hermes plugins install Xquik-dev/hermes-tweet
+export XQUIK_API_KEY="your_api_key"
+```
+
+只有用户明确要求实际发布时，才开启：
+
+```bash
+export HERMES_TWEET_ENABLE_ACTIONS=true
+```
+
+不要在聊天中粘贴 API Key、Cookie 或 Token。
+
+### 操作流程
+
+1. 先把视频脚本改写成 X/Twitter 版本：1 条主帖或 3-7 条串文。
+2. 保留钩子、核心观点、CTA 和相关标签，不要照搬视频脚本。
+3. 如果需要读取实时语境，先确认 `XQUIK_API_KEY` 已配置。
+4. 发布前展示最终文案，等待用户明确确认。
+5. 只有 `HERMES_TWEET_ENABLE_ACTIONS=true` 且用户确认后，才能执行发布动作。
 
 ## 制作优先级建议
 

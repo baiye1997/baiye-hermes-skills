@@ -158,6 +158,24 @@ export EM_API_KEY="your_api_key"
 2. 配置环境变量：`export AMAP_API_KEY="***"`
 
 > 不配置也能使用通勤提醒，只是缺少实时路况数据。
+
+### Hermes Tweet（X/Twitter 发布，可选）
+
+用于 `social-media-video-scripts` 生成 X/Twitter 发布草稿、串文和发布前检查。
+
+```bash
+hermes plugins install Xquik-dev/hermes-tweet
+export XQUIK_API_KEY="your_api_key"
+```
+
+只有明确需要实际发布时再开启动作开关：
+
+```bash
+export HERMES_TWEET_ENABLE_ACTIONS=true
+```
+
+不要在聊天中粘贴 API Key、Cookie 或 Token。发布前必须确认最终文案。
+
 ---
 
 ## 🤝 贡献
