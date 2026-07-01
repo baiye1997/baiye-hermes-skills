@@ -120,7 +120,7 @@ Part 6（5:10-6:00）：真实感受+CTA
 ### 前置条件
 
 ```bash
-hermes plugins install Xquik-dev/hermes-tweet
+hermes plugins install Xquik-dev/hermes-tweet --enable
 export XQUIK_API_KEY="your_api_key"
 ```
 
